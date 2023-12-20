@@ -1,0 +1,169 @@
+#+STARTUP: beamer
+#+STARTUP: indent
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [beamer, aspectratio=1610]
+#+TITLE: Machine Learning
+#+SUBTITLE: PyTorch
+#+AUTHOR: Haochen Wang
+#+OPTIONS: H:3 
+# #+OPTIONS: toc:nil 
+#+LATEX_COMPILER: pdflatex
+#+BEAMER_HEADER: \title[Machine Learning]{Machine Learning}
+
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_act(Act) %4BEAMER_col(Col) %8BEAMER_opt(Opt)
+
+# # +SELECT_TAGS: current
+# #+EXCLUDE_TAGS: detail
+
+* Configuration                                                      :ignore:
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
+
+# #+BEAMER_THEME: Madrid
+# #+BEAMER: \addtocounter{framenumber}{-4}
+
+** Packages & Setup                                                 :ignore:
+#+LATEX_HEADER: \usepackage{color}
+#+LATEX_HEADER: \usepackage{animate}
+#+LATEX_HEADER: \newcommand{\cvtime}[1]{\hfill \textsf{(#1)}}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usepackage{tikzsymbols}
+#+LATEX_HEADER: \usetikzlibrary{decorations.pathmorphing}
+#+LATEX_HEADER: \tikzset{zigzag/.style={decorate,decoration=zigzag}}
+#+BEAMER_HEADER: \newcommand\tikzmark[1]{\tikz[remember picture,overlay] \node[inner xsep=0pt] (#1) {}; }
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage{adjustbox}
+#+LATEX_HEADER: \adjustboxset{width=0.99\textwidth,center,keepaspectratio}
+#+LATEX_HEADER: \setbeamerfont{footnote}{size=\scriptsize}
+#+LATEX_HEADER: \newcommand{\trimeqspace}{\vspace{-1.5em}}
+#+LATEX_HEADER: \newcommand{\trimeqspacehalf}{\vspace{-0.75em}}
+#+LATEX_HEADER: \usepackage{appendixnumberbeamer}
+
+#+LATEX_HEADER: \usepackage{copyrightbox}
+#+LATEX_HEADER: \makeatletter
+#+LATEX_HEADER: \renewcommand{\CRB@setcopyrightfont}{\tiny\color{gray}}
+#+LATEX_HEADER: \makeatother
+
+#+BEAMER_HEADER: \author[PyTorch]{Haochen Wang}
+#+BEAMER_HEADER: \institute[University of Stuttgart]{Chair of Data-Driven Fluid Dynamics (ITLR-DDSim) \\ Institut für Thermodynamik der Luft- und Raumfahrt \\ Universität Stuttgart}
+#+BEAMER_HEADER: \titlegraphic{\includegraphics[height=.15\paperheight,keepaspectratio]{./logos/simtech-itlr-unistr.jpg}}
+# \hspace{2mm} \includegraphics[height=.1\paperheight,keepaspectratio]{./logos/simtech-logo.png}
+# \includegraphics[height=.22\textheight,keepaspectratio]{./logos/create-crop.jpg}
+# \hspace{2mm}
+
+#+latex_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}}
+
+** VT Theme Setup                                                   :ignore:
+
+#+BEAMER_THEME: [left] Marburg
+#+BEAMER_HEADER: \usecolortheme{beaver}
+#+BEAMER_HEADER: \usefonttheme{professionalfonts}  
+#+BEAMER_HEADER: \setbeamertemplate{navigation symbols}{\insertframenumber/\inserttotalframenumber}
+#+BEAMER_HEADER: \setbeamertemplate{caption}[numbered]
+#+BEAMER_HEADER: \setbeamertemplate{section in toc}[sections numbered]
+#+BEAMER_HEADER: \setbeamertemplate{subsection in toc}[subsections numbered]
+#+BEAMER_HEADER: \setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
+# VT Theme
+#+BEAMER_HEADER: \definecolor{CMaroon}{RGB}{139,31,65}
+#+BEAMER_HEADER: \definecolor{VSunset}{RGB}{247,144,30}
+#+BEAMER_HEADER: \definecolor{HStone}{RGB}{109,106,117}
+
+# see http://www.uni-stuttgart.de/more/corporate_design/cd-dateien/Uni_Stuttgart_CD-Manual_2016_klein.pdf
+#+BEAMER_HEADER: \definecolor{uniSblue}{RGB}{0,65,145}
+#+BEAMER_HEADER: \definecolor{uniSlightblue}{RGB}{0,190,255}
+#+BEAMER_HEADER: \definecolor{uniSgray}{RGB}{62, 68, 76}
+#+BEAMER_HEADER: \definecolor{uniSyellow}{RGB}{255, 213, 0}
+#+BEAMER_HEADER: \definecolor{uniSred}{RGB}{230, 0, 50}
+#+BEAMER_HEADER: \definecolor{uniSgreen}{RGB}{0, 200, 50}
+
+#+BEAMER_HEADER: \makeatletter
+#+BEAMER_HEADER: \setbeamertemplate{sidebar canvas \beamer@sidebarside}[vertical shading][top=uniSlightblue!90,bottom=uniSblue!75]
+#+BEAMER_HEADER: \makeatother
+#+BEAMER_HEADER: \setbeamercolor{palette sidebar secondary}{fg=black}
+#+BEAMER_HEADER: \setbeamercolor{section in sidebar shaded}{fg=uniSgray!85}
+#+BEAMER_HEADER: \setbeamercolor{subsection in sidebar shaded}{fg=uniSgray}
+#+BEAMER_HEADER: \setbeamercolor{subsection in sidebar}{fg=uniSblue}
+#+BEAMER_HEADER: \setbeamerfont{section in sidebar}{series=\bfseries}
+#+BEAMER_HEADER: \setbeamerfont{subsection in sidebar shaded}{series=\bfseries}
+#+BEAMER_HEADER: \makeatletter
+#+BEAMER_HEADER: \newcommand{\setnextsection}[1]{%
+#+BEAMER_HEADER:  \setcounter{section}{\numexpr#1-1\relax}%
+#+BEAMER_HEADER:  \beamer@tocsectionnumber=\numexpr#1-1\relax\space}
+#+BEAMER_HEADER: \makeatother
+#+LaTeX_HEADER: \addtobeamertemplate{footnote}{}{\vspace{0.3ex}}
+#+LaTeX_HEADER: \addtobeamertemplate{footnote}{\hskip -1.5em}{}
+
+*** Shades for blocks in VT Theme                                  :ignore:
+#+LATEX_HEADER: \setbeamertemplate{blocks}[rounded][shadow]
+#+LATEX_HEADER: \setbeamercolor{block title}{fg=white,bg=uniSlightblue!95} 
+#+LATEX_HEADER: \setbeamercolor{block body}{fg=black,bg=uniSlightblue!10} 
+#+LATEX_HEADER: \setbeamercolor{block title example}{fg=white,bg=uniSgreen!65!black} 
+#+LATEX_HEADER: \setbeamercolor{block body example}{fg=black,bg=uniSgreen!10}
+#+LATEX_HEADER: \setbeamercolor{block title  alerted}{fg=white,bg=uniSred} 
+#+LATEX_HEADER: \setbeamercolor{block body alerted}{fg=black,bg=uniSred!10} 
+
+#+LATEX_HEADER: \setbeamercolor{title}{fg=uniSblue,bg=uniSgray!20}
+#+LATEX_HEADER: \setbeamercolor{frametitle}{fg=uniSblue}
+
+#+LATEX_HEADER: \setbeamercolor{palette primary}{bg=uniSgray!20,fg=uniSgray}
+#+LATEX_HEADER: \setbeamercolor{palette secondary}{bg=uniSblue,fg=white}
+#+LATEX_HEADER: \setbeamercolor{palette tertiary}{fg=white}
+#+LATEX_HEADER: \setbeamercolor{palette quaternary}{fg=uniSblue}
+
+#+LATEX_HEADER: \setbeamercolor{titlelike}{parent=palette quaternary}
+
+
+** COMMENT Grid for Figure Sizing                                           :ignore:
+
+#+LATEX_HEADER: \usepackage{calc}
+#+LATEX_HEADER: \setbeamertemplate{background}{
+#+LATEX_HEADER:     \begin{tikzpicture}[remember picture,overlay,shift=(current page.south west)]
+#+LATEX_HEADER:         \begin{scope}[x={(current page.south east)},y={(current page.north west)}]
+#+LATEX_HEADER:         \draw[xstep=0.25, ystep=0.1,green!30,thin] (0.15,0) grid (1, 0.9);
+#+LATEX_HEADER:         \draw[thick,->,blue!80] (0.95,0) -- (0.95,0.85);
+#+LATEX_HEADER:         \foreach \y in {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8}
+#+LATEX_HEADER:         \draw[blue!70] (0.95, \y ) -- (0.96,\y ) node[anchor=west] {$\y$};
+#+LATEX_HEADER:     \end{scope}
+#+LATEX_HEADER: \end{tikzpicture} }
+
+
+* Copyright
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+*** Copyright Notice
+**** Warning
+:PROPERTIES:
+:BEAMER_env: alertblock
+:END:
+Please use the slides for only your own educational purposes.
+
+**Further distribution is strictly prohibited.**
+
+
+* PyTorch
+*** PyTorch
+#+ATTR_LATEX: :width 0.8\textwidth
+[[./figs/pytorchlogo.png]]
++ PyTorch is a library for Python programs that facilitates building deep learning projects.
+
+*** Why PyTorch?
+#+CAPTION: Comparison between different libraries used in papers
+#+ATTR_LATEX: :width 0.6\textwidth
+[[./figs/pytorchcomparison.png]]
+
+*** Why PyTorch?
++ A core data structure, the /tensor/ which is a multidimensional array that shares many similarities with NumPy arrays.
+    
++ Features to perform accelerated mathematical operations on dedicated hardware like GPU.
+    
++ The ability of tensors to keep track of the operations performed on them and to analytically compute derivatives of an output of a computation with respect to any of its inputs.
+
+
+* Exercise
+*** Exercise
++ Go to the ILIAS to download the notebook file named "PyTorch-Exercise-For-Class.ipynb".
++ Open the file using Google Colab.
++ Walk through four prerequisites and then start doing the exercise.
